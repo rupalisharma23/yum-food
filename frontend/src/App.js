@@ -1,11 +1,10 @@
-
-import './App.css';
+import "./App.css";
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { HashRouter as Router, Route, Routes } from "react-router-dom"; // Note: Using HashRouter
 import { Switch } from "react-router-dom";
-import SignupLogin from './Components/SignupLogin';
-import Home from './Components/Home';
-import MyOrders from './Components/MyOrders';
+import SignupLogin from "./Components/SignupLogin";
+import Home from "./Components/Home";
+import MyOrders from "./Components/MyOrders";
 
 function App() {
   return (
