@@ -16,7 +16,7 @@ const Navigation = (props) => {
                 <NavLink to="/MyOrders" className="nav-button">
                     My Orders
                 </NavLink>
-                {window.location.pathname !== '/MyOrders' && <NavLink className="nav-button" onClick={() => { props.setCartFlag(true) }}>
+                {window.location.hash !== '#/MyOrders' && <NavLink className="nav-button" onClick={() => { props.setCartFlag(true) }}>
                     <div style={{position:'relative'}}>
                         <ShoppingCartIcon className="white-icon" />
                         {(props.cartItems.length > 0 )&& <div className='cartCount'>{props.cartItems.length}</div>}
