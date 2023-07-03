@@ -4,10 +4,13 @@ import './SignupLogin.css';
 import axios from 'axios';
 import {  useNavigate } from 'react-router-dom';
 import backendURL from './Config';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function SignupLogin() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
+    const [address, setAddress] = useState('');
     const [password, setPassword] = useState('');
     const [emailLogin, setEmailLogin] = useState('');
     const [passwordLogin, setPasswordLogin] = useState('');
@@ -45,7 +48,8 @@ export default function SignupLogin() {
                     {
                         email: email,
                         password: password,
-                        name: name
+                        name: name,
+                        address:address
                     },
                     {headers:{
                         'Content-Type':'application/json'
@@ -55,6 +59,16 @@ export default function SignupLogin() {
                     setFlag(true)
                 })
                 .catch((error) => {
+                    toast.error(error.response.data.error, {
+                        position: toast.POSITION.TOP_CENTER,
+                        autoClose: 1000,
+                        hideProgressBar: true,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        className: 'custom-toast', // Add your custom class here
+                    })
                 });
     }};
 
@@ -145,6 +159,16 @@ export default function SignupLogin() {
                         />
                     </div>
                     <div className="form-group">
+                        <label htmlFor="address">Address:</label>
+                        <input
+                            type="text"
+                            id="address"
+                            value={address}
+                            onChange={(e) => setAddress(e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div className="form-group">
                         <label htmlFor="password">Password:</label>
                         <input
                             type="password"
@@ -167,6 +191,7 @@ export default function SignupLogin() {
 
   return (
     <div className='mainContainer'>
+          <ToastContainer />
           {flag ? loginForm() : signiUp()}
     </div>
     
