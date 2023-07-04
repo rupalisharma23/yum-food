@@ -16,12 +16,12 @@ const Navigation = (props) => {
                 <NavLink to="/MyOrders" className="nav-button">
                     My Orders
                 </NavLink>
-                {window.location.hash !== '#/MyOrders' && <NavLink className="nav-button" onClick={() => { props.setCartFlag(true) }}>
+                 <NavLink className="nav-button" onClick={() => { props.setCartFlag(true) }}>
                     <div style={{position:'relative'}}>
                         <ShoppingCartIcon className="white-icon" />
-                        {(props.cartItems.length > 0 )&& <div className='cartCount'>{props.cartItems.length}</div>}
+                        { props.cartCount !== 0 && <div className='cartCount'>{props.cartCount}</div>} 
                         </div>
-                </NavLink>}
+                </NavLink>
                 <NavLink className="nav-button" to="/" onClick={() => { localStorage.clear() }}>
                     <LogoutIcon className="white-icon" />
                 </NavLink>
