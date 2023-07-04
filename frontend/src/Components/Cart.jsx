@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useEffect,useState} from 'react';
 import { Dialog, DialogActions, DialogContent } from '@material-ui/core';
 import './Cart.css';
 import axios from 'axios';
@@ -6,28 +6,48 @@ import CloseIcon from '@mui/icons-material/Close';
 import backendURL from './Config';
 
 export default function Cart(props) {
-    let { cartItems, setCartItems, setCartFlag } = props;
-    const getTotalPrice = (items) => {
+    let {  setCartFlag } = props;
+    const [cartItems, setCartItems] = useState([])
+    const getTotalPrice = () => {
         let totalPrice = 0;
-
-        items.forEach((item) => {
-            totalPrice += parseInt(item.price) * item.quantity;
-        });
-
+        cartItems.forEach((items)=>{
+            items.cart.forEach((item) => {
+                totalPrice += parseInt(item.price) * item.quantity;
+            });
+        })
         return totalPrice;
     };
+
+    useEffect(()=>{
+        if (props.cartFlag)
+        CartGetApi();
+    }, [props.cartFlag])
+
     console.log(cartItems)
 
+    const CartGetApi = () => {
+        return axios
+            .post(`${backendURL}/api/getCart`, {
+                email: localStorage.getItem('email')
+            })
+            .then((res) => {
+                setCartItems(res.data)
+            })
+            .catch((error) => { });
+    }
+
     const buyOrders =() =>{
+        let orders = cartItems
         return axios
             .post(`${backendURL}/api/Orders`, {
                 email:localStorage.getItem('email'),
-                orders:cartItems
+                orders: orders[0].cart
             })
             .then((res) => {
                 setCartItems([])
             })
             .catch((error) => { });
+        console.log(orders)
     }
 
 
@@ -35,9 +55,13 @@ export default function Cart(props) {
        buyOrders()
     };
 
-    const deleteCartItems = (index) =>{
-        const filteredArray = cartItems.filter((obj, index1) => index1 !== index);
-        setCartItems(filteredArray)
+    const deleteCartItems = (index,id) =>{
+        return axios
+            .delete(`${backendURL}/api/cartDelete/${id}`)
+            .then((res) => {
+                CartGetApi()
+            })
+            .catch((error) => { });
     }
 
 
@@ -70,17 +94,23 @@ export default function Cart(props) {
                           </thead>
                           <tbody>
                               {/* Add your table rows here */}
-                              {cartItems.map((cart, index) => {
+                              {cartItems.map((cartItem, index) => {
+                                let {cart} = cartItem
                                   return (
-                                      <tr>
-                                          <td style={{ padding: '1rem 0rem', fontFamily: 'cursive', fontSize: '1.2rem' }}>{cart.name}</td>
-                                          <td style={{ padding: '1rem 0rem', fontFamily: 'cursive', fontSize: '1.2rem' }}>{cart.quantity}</td>
-                                          <td style={{ padding: '1rem 0rem', fontFamily: 'cursive', fontSize: '1.2rem' }}>{parseInt(cart.price) * cart.quantity} </td>
-                                          <td style={{ padding: '1rem 0rem', fontFamily: 'cursive', fontSize: '1.2rem', color:'red' }} onClick={()=>{deleteCartItems(index)}} >Delete</td>
-                                      </tr>
+                                    cart.map((cart)=>{
+                                        return(
+                                            <tr>
+                                                <td style={{ padding: '1rem 0rem', fontFamily: 'cursive', fontSize: '1.2rem' }}>{cart.name}</td>
+                                                <td style={{ padding: '1rem 0rem', fontFamily: 'cursive', fontSize: '1.2rem' }}>{cart.quantity}</td>
+                                                <td style={{ padding: '1rem 0rem', fontFamily: 'cursive', fontSize: '1.2rem' }}>{parseInt(cart.price) * cart.quantity} </td>
+                                                <td style={{ padding: '1rem 0rem', fontFamily: 'cursive', fontSize: '1.2rem', color: 'red' }} onClick={() => { deleteCartItems(index, cart._id) }} >Delete</td>
+                                            </tr>
+                                        )
+                                    })
+                                      
                                   )
                               })}
-                              <div className='totalPrice'>Total Price : Rs{getTotalPrice(cartItems)}</div>
+                              <div className='totalPrice'>Total Price : Rs{getTotalPrice()}</div>
                           </tbody>
                       </table>
               )

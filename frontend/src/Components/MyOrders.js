@@ -6,9 +6,11 @@ import backendURL from "./Config";
 
 export default function () {
   const [orders, setOrders] = useState([]);
+  const [cartCount, setCartCount] = useState("");
 
   useEffect(() => {
     OrderListApi();
+     cartCountApi();
   }, []);
 
   const OrderListApi = () => {
@@ -21,6 +23,16 @@ export default function () {
       })
       .catch((error) => {});
   };
+
+    const cartCountApi = () => {
+      return axios
+        .get(`${backendURL}/api/getCount`, {
+          headers: { email: localStorage.getItem("email") },
+        })
+        .then((res) => {
+         setCartCount(res.data.count); 
+        });
+    };
 
   const groupOrdersByDate = (ordersData) => {
     const groupedOrders = ordersData.reduce((result, user) => {
@@ -45,7 +57,7 @@ export default function () {
 
   return (
     <div>
-      <Navigation />
+      <Navigation cartCount={cartCount} />
       {Object.keys(groupedOrders).map((date) => {
         return (
           <>
