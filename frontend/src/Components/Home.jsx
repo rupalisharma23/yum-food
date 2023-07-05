@@ -16,13 +16,11 @@ export default function Home() {
     const day = currentDate.getDate();
     const month = currentDate.getMonth() + 1; // Months are zero-based
     const year = currentDate.getFullYear();
-
-    // Format the date as "1/07/2023"
     const formattedDate = `${day}/${month}/${year}`;
 
     useEffect(() => {
         foodListApi();
-        cartCountApi();
+        localStorage.getItem('token') &&  cartCountApi();
     }, [cartFlag])
 
     const foodListApi = () => {
@@ -60,6 +58,19 @@ export default function Home() {
     };
 
     const handleAddToCart = (index1, index2, dishes) => {
+        if (!localStorage.getItem('token')){
+            toast.error("please login", {
+                position: toast.POSITION.TOP_CENTER,
+                autoClose: 1000,
+                hideProgressBar: true,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                className: 'custom-toast', // Add your custom class here
+            })
+        }
+        else{
         return axios
             .post(
                 `${backendURL}/api/cart`,
@@ -102,7 +113,7 @@ export default function Home() {
                     progress: undefined,
                     className: 'custom-toast', // Add your custom class here
                 })
-            });
+            });}
     };
 
     return (

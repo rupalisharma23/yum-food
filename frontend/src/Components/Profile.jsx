@@ -13,8 +13,8 @@ export default function Profile() {
     const [password, setPassword] = useState('');
     const [cartCount, setCartCount] = useState("");
     useEffect(() => {
-        getUser();
-        cartCountApi();
+        localStorage.getItem('token') && getUser();
+        localStorage.getItem('token') &&  cartCountApi();
     }, []);
 
 
@@ -123,7 +123,7 @@ export default function Profile() {
                       />
                   </div>
 
-                  <div style={{ position: 'absolute', bottom: '0', right: '0' }}>
+                  <div style={{ position: 'absolute', bottom: '0', width: '100%', textAlign: 'center' }}>
                       <button type="submit" className='buyAgainButton'>Save Changes</button>
                   </div>
               </form>
