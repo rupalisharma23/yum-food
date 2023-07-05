@@ -22,7 +22,7 @@ export default function Home() {
 
     useEffect(() => {
         foodListApi();
-        cartCountApi();
+        // cartCountApi();
     }, [cartFlag])
 
     const foodListApi = () => {
@@ -108,7 +108,7 @@ export default function Home() {
     return (
         <div style={{ width: '100%' }}>
             <ToastContainer />
-            <Navigation setCartFlag={setCartFlag} cartCount={cartCount} />
+            <Navigation  cartCount={cartCount} />
             <div className="image-container">
                 <img src="/background.jpg" alt="Image" />
             </div>

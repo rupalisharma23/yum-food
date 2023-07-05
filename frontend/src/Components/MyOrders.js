@@ -6,11 +6,11 @@ import backendURL from "./Config";
 
 export default function () {
   const [orders, setOrders] = useState([]);
-  const [cartCount, setCartCount] = useState("");
+  // const [cartCount, setCartCount] = useState("");
 
   useEffect(() => {
     OrderListApi();
-     cartCountApi();
+    //  cartCountApi();
   }, []);
 
   const OrderListApi = () => {
@@ -24,15 +24,15 @@ export default function () {
       .catch((error) => {});
   };
 
-    const cartCountApi = () => {
-      return axios
-        .get(`${backendURL}/api/getCount`, {
-          headers: { email: localStorage.getItem("email") },
-        })
-        .then((res) => {
-         setCartCount(res.data.count); 
-        });
-    };
+    // const cartCountApi = () => {
+    //   return axios
+    //     .get(`${backendURL}/api/getCount`, {
+    //       headers: { email: localStorage.getItem("email") },
+    //     })
+    //     .then((res) => {
+    //      setCartCount(res.data.count); 
+    //     });
+    // };
 
   const groupOrdersByDate = (ordersData) => {
     const groupedOrders = ordersData.reduce((result, user) => {
@@ -57,8 +57,10 @@ export default function () {
 
   return (
     <div>
-      <Navigation cartCount={cartCount} />
-      {Object.keys(groupedOrders).map((date) => {
+      <Navigation />
+      {orders.length === 0  ?
+                  <div className='emptyCart' style={{height:'80vh'}}>you have no orders yet</div>:
+      (Object.keys(groupedOrders).map((date) => {
         return (
           <>
             <h3 style={{ marginLeft: "10px" }}>Date: {date}</h3>
@@ -84,7 +86,7 @@ export default function () {
             </div>
           </>
         );
-      })}
+      }))}
     </div>
   );
 }
