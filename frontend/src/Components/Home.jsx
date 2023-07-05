@@ -4,7 +4,6 @@ import Navigation from './NavBar';
 import './Home.css';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Cart from './Cart';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import backendURL from './Config';
@@ -149,7 +148,6 @@ export default function Home() {
                     )
                 })
             }
-            <Cart cartFlag={cartFlag} setCartFlag={setCartFlag} />
         </div>
     )
 }

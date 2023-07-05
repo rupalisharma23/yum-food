@@ -5,6 +5,7 @@ import { Switch } from "react-router-dom";
 import SignupLogin from "./Components/SignupLogin";
 import Home from "./Components/Home";
 import MyOrders from "./Components/MyOrders";
+import Cart from "./Components/Cart";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
           <Route exact path={"/"} element={<SignupLogin />} />
           <Route exact path={"/Home"} element={<Home />} />
           <Route exact path={"/MyOrders"} element={<MyOrders />} />
+          <Route exact path={"/Cart"} element={<Cart />} />
         </Routes>
       </Router>
     </div>

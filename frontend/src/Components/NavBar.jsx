@@ -23,7 +23,7 @@ const Navigation = (props) => {
                         </NavLink>
                     </li>
                     <li className="nav-item">
-                        <NavLink className="nav-link" onClick={() => { props.setCartFlag(true) }}>
+                        <NavLink to="/Cart" className="nav-link" >
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 Cart
                                 {props.cartCount !== 0 && <div className='cartCount'>{props.cartCount}</div>}

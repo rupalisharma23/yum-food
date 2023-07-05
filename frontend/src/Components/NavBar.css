@@ -16,6 +16,10 @@
     text-decoration: none;
     font-family: cursive;
 }
+.navbar-dark .navbar-nav .nav-item :hover{
+    font-size: 1.4rem;
+    color: white;
+}
 
 .navbar-collapse{
   flex-grow: 0;
