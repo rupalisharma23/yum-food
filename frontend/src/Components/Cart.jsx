@@ -19,8 +19,8 @@ export default function Cart() {
     };
 
     useEffect(()=>{
-        CartGetApi();
-        cartCountApi();
+        localStorage.getItem('token') && CartGetApi();
+        localStorage.getItem('token') && cartCountApi();
     }, [])
 
     const CartGetApi = () => {
@@ -115,9 +115,9 @@ export default function Cart() {
               )
               }
               {/* Add any actions or buttons here */}
-              <div style={{position:'absolute', bottom:'0', right:'0'}}>
-                  <button onClick={handleBuyAgain} className='buyAgainButton'>Buy</button>
-              </div>
+              {(cartItemsChek.length > 0) && (<div style={{ position: 'absolute', bottom: '0', width: '100%', textAlign: 'center' }}>
+                 <button onClick={handleBuyAgain} className='buyAgainButton'>Buy</button>
+              </div>)}
               </div>
       </div>
   )

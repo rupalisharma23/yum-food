@@ -93,3 +93,43 @@ p {
     margin-right: 10px;
     font-family: cursive;
 }
+
+.search-bar-container{
+  display: flex;
+  justify-content: center;
+}
+
+.search-icon{
+  position: relative;
+  width: 60%;
+}
+
+.search-bar-container input{
+  margin-top: 2rem;
+  margin-left: 10px;
+  padding-left: 40px;
+}
+
+.search-icon svg {
+    margin-right: 5px;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    top: 44px;
+    left: 23px;
+
+}
+
+
+
+@media (max-width: 600px) {
+
+  .search-bar-container input {
+    margin-bottom: 10px;
+  }
+
+  .search-icon{
+    width: 80%;
+  }
+
+}

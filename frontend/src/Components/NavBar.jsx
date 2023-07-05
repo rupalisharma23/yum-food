@@ -4,9 +4,11 @@ import './NavBar.css';
 import { useState, useEffect } from "react";
 import axios from "axios";
 import backendURL from "./Config";
+import { useNavigate } from 'react-router-dom';
 
 const Navigation = (props) => {
 let {cartCount} = props
+    const navigate = useNavigate();
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark justify-content-between">
@@ -18,10 +20,12 @@ let {cartCount} = props
             <div className="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul className="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li className="nav-item pr-2">
-                        <NavLink to="/Home" className="nav-link">
+                        <NavLink to="/" className="nav-link">
                             Home
                         </NavLink>
                     </li>
+                    {localStorage.getItem('token')?
+                    <>
                     <li className="nav-item pr-2">
                         <NavLink to="/MyOrders" className="nav-link">
                             My Orders
@@ -42,10 +46,23 @@ let {cartCount} = props
                         </NavLink>
                     </li>
                     <li className="nav-item pr-2">
-                        <NavLink className="nav-link" to="/" onClick={() => { localStorage.clear() }}>
+                        <NavLink className="nav-link" to="/" onClick={() => { navigate("/"); localStorage.clear(); window.location.reload();  }}>
                             Logout
                         </NavLink>
                     </li>
+                        </>:
+                        <>
+                        <li className="nav-item pr-2">
+                        <NavLink to="/Register" className="nav-link">
+                            Register
+                        </NavLink>
+                    </li>
+                    <li className="nav-item pr-2">
+                        <NavLink className="nav-link" to="/Login">
+                            Login
+                        </NavLink>
+                            </li></>}
+
                 </ul>
             </div>
         </nav>

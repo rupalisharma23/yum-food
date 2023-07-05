@@ -9,8 +9,8 @@ export default function () {
   const [cartCount, setCartCount] = useState("");
 
   useEffect(() => {
-    OrderListApi();
-     cartCountApi();
+   localStorage.getItem("token") && OrderListApi();
+   localStorage.getItem("token") && cartCountApi();
   }, []);
 
   const OrderListApi = () => {

@@ -6,28 +6,19 @@ import {  useNavigate } from 'react-router-dom';
 import backendURL from './Config';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Navigation from "./NavBar";
 
 export default function SignupLogin() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');
     const [password, setPassword] = useState('');
-    const [emailLogin, setEmailLogin] = useState('');
-    const [passwordLogin, setPasswordLogin] = useState('');
-    const [flag, setFlag] = useState(false);
-    const [error,setError] = useState('')
-    const navigate =  useNavigate();
+    const [error,setError] = useState('');
+    const navigate = useNavigate();
 
     const handleSignup = (e) => {
         e.preventDefault();
-        // Add your signup logic here, e.g., sending data to the server
         SignUp()
-    };
-
-    const handleLogin = (e) => {
-        e.preventDefault();
-        // Add your signup logic here, e.g., sending data to the server
-        login();
     };
 
     const SignUp = () => {
@@ -56,7 +47,7 @@ export default function SignupLogin() {
                     }}
                 )
                 .then((res) => {
-                    setFlag(true)
+                    navigate("/Login")
                 })
                 .catch((error) => {
                     toast.error(error.response.data.error, {
@@ -72,127 +63,75 @@ export default function SignupLogin() {
                 });
     }};
 
-    const login = () => {
-        const emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
-        if (!emailPattern.test(emailLogin)) {
-            setError('Please enter a valid email address');
-        }
-        else if (passwordLogin.length < 5) {
-            setError('please enter valid password')
-        }
-        else{
-            return axios
-                .post(
-                    `${backendURL}/api/login`,
-                    {
-                        email: emailLogin,
-                        password: passwordLogin
-                    },
-                )
-                .then((res) => {
-                    localStorage.setItem('token', res.data.authToken)
-                    localStorage.setItem('email', emailLogin)
-                    navigate("/Home")
-                })
-                .catch((error) => {
-                    setError(error.response.data.errors)
-                });
-        }
-    };
-
-    const loginForm = () =>{
-        return (
-            <div className="signup-container">
-                <h1>LoginIn</h1>
-                <form onSubmit={handleLogin}>
-                   
-                    <div className="form-group">
-                        <label htmlFor="email">Email:</label>
-                        <input
-                            type="email"
-                            id="email"
-                            value={emailLogin}
-                            onChange={(e) => setEmailLogin(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="password">Password:</label>
-                        <input
-                            type="password"
-                            id="password"
-                            value={passwordLogin}
-                            onChange={(e) => setPasswordLogin(e.target.value)}
-                            required
-                        />
-                    </div>
-                    {error && <div className='error'>{error}</div>}
-                    <div className='buttonContainer'> <button type="submit" className="signup-button">login</button></div>
-                </form>
-            </div>
-        )
-    }
-
     const signiUp = () =>{
         return (
-            <div className="signup-container">
-                <h1>Signup</h1>
-                <form onSubmit={handleSignup}>
-                    <div className="form-group">
-                        <label htmlFor="name">Name:</label>
-                        <input
-                            type="text"
+            <div>
+                <Navigation />
+                <div className="container" style={{ height: '80vh', position: 'relative' }}>
+                    <h1>Register</h1>
+                    <form onSubmit={handleSignup}>
+                        <div className="label-container mt-4">
+                            <label htmlFor="name">Name:</label>
+                            <input
+                                type="text"
                             id="name"
                             value={name}
                             onChange={(e) => setName(e.target.value)}
                             required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="email">Email:</label>
-                        <input
-                            type="email"
+                                className="input-field"
+                            />
+                        </div>
+
+                        <div className="label-container mt-4">
+                            <label htmlFor="email">Email:</label>
+                            <input
+                                type="email"
                             id="email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="address">Address:</label>
-                        <input
-                            type="text"
-                            id="address"
-                            value={address}
-                            onChange={(e) => setAddress(e.target.value)}
-                            required
-                        />
-                    </div>
-                    <div className="form-group">
-                        <label htmlFor="password">Password:</label>
-                        <input
-                            type="password"
-                            id="password"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
-                    </div>
-                    {error && <div className='error'>{error}</div>}
-                    <div className='buttonContainer'><button type="submit" className="signup-button">Sign Up</button></div>               
-                </form>
-                <p>
-                    Already have an account? <a onClick={()=>{setFlag(true)}}>Sign In</a>
-                </p>
+                                className="input-field"
+                                required
+                            />
+                        </div>
+
+                        <div className="label-container mt-4">
+                            <label htmlFor="address">Address:</label>
+                            <textarea
+                                type="text"
+                                id="address"
+                                value={address}
+                                onChange={(e) => setAddress(e.target.value)}
+                                className="textarea-field"
+                                required
+                            />
+                        </div>
+
+                        <div className="label-container mt-4">
+                            <label htmlFor="address">Password:</label>
+                            <input
+                                type="password"
+                                id="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                className="input-field"
+                                required
+                            />
+                        </div>
+                        {error && <div className='error'>{error}</div>}
+                        <div style={{ position: 'absolute', bottom: '0', width: '100%', textAlign: 'center' }}>
+                            <button type="submit" className='buyAgainButton'>Save</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         )
     }
 
 
   return (
-    <div className='mainContainer'>
+    <div>
           <ToastContainer />
-          {flag ? loginForm() : signiUp()}
+          {signiUp()}
     </div>
     
   )
