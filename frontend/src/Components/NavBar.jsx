@@ -6,22 +6,7 @@ import axios from "axios";
 import backendURL from "./Config";
 
 const Navigation = (props) => {
-    const [cartCount, setCartCount] = useState('');
-    
-    useEffect(() => {
-        cartCountApi();
-    }, []);
-
-
-    const cartCountApi = () => {
-        return axios
-            .get(`${backendURL}/api/getCount`, {
-                headers: { email: localStorage.getItem("email") },
-            })
-            .then((res) => {
-                setCartCount(res.data.count);
-            });
-    };
+let {cartCount} = props
 
     return (
         <nav className="navbar navbar-expand-lg navbar-dark justify-content-between">
@@ -46,7 +31,8 @@ const Navigation = (props) => {
                         <NavLink to="/Cart" className="nav-link" >
                             <div style={{ display: 'flex', alignItems: 'center' }}>
                                 Cart
-                                {(cartCount !== 0 && props.cartCount!==0) && <div className='cartCount'>{props.cartCount ? props.cartCount: cartCount}</div>}
+                                {/* {cartCount !== 0  && <div className='cartCount'>{cartCount}</div>} */}
+                                { cartCount !== 0 && <div className='cartCount'>{cartCount}</div> }
                             </div>
                         </NavLink>
                     </li>

@@ -22,7 +22,7 @@ export default function Home() {
 
     useEffect(() => {
         foodListApi();
-        // cartCountApi();
+        cartCountApi();
     }, [cartFlag])
 
     const foodListApi = () => {

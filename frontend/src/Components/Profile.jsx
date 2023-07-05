@@ -11,8 +11,10 @@ export default function Profile() {
     const [email, setEmail] = useState('');
     const [address, setAddress] = useState('');
     const [password, setPassword] = useState('');
+    const [cartCount, setCartCount] = useState("");
     useEffect(() => {
         getUser();
+        cartCountApi();
     }, []);
 
 
@@ -68,11 +70,21 @@ export default function Profile() {
         });
     };
 
+    const cartCountApi = () => {
+        return axios
+            .get(`${backendURL}/api/getCount`, {
+                headers: { email: localStorage.getItem("email") },
+            })
+            .then((res) => {
+                setCartCount(res.data.count);
+            });
+    };
+
 
   return (
     <div>
         <ToastContainer/>
-          <Navigation />
+          <Navigation cartCount={cartCount} />
           <div className="container" style={{height:'80vh', position:'relative'}}>
               <h1>Edit Profile</h1>
               <form onSubmit={handleSubmit}>
