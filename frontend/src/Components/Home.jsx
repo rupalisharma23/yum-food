@@ -4,7 +4,6 @@ import Navigation from './NavBar';
 import './Home.css';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import Cart from './Cart';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import backendURL from './Config';
@@ -109,7 +108,7 @@ export default function Home() {
     return (
         <div style={{ width: '100%' }}>
             <ToastContainer />
-            <Navigation setCartFlag={setCartFlag} cartCount={cartCount} />
+            <Navigation  cartCount={cartCount} />
             <div className="image-container">
                 <img src="/background.jpg" alt="Image" />
             </div>
@@ -149,7 +148,6 @@ export default function Home() {
                     )
                 })
             }
-            <Cart cartFlag={cartFlag} setCartFlag={setCartFlag} />
         </div>
     )
 }

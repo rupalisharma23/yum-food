@@ -1,13 +1,13 @@
 import React,{useEffect,useState} from 'react';
-import { Dialog, DialogActions, DialogContent } from '@material-ui/core';
 import './Cart.css';
 import axios from 'axios';
-import CloseIcon from '@mui/icons-material/Close';
 import backendURL from './Config';
+import Navigation from "./NavBar";
 
-export default function Cart(props) {
-    let {  setCartFlag } = props;
-    const [cartItems, setCartItems] = useState([])
+export default function Cart() {
+    const [cartItems, setCartItems] = useState([]);
+    const [cartItemsChek, setCartItemsCheck] = useState([]);
+    const [cartCount, setCartCount] = useState("");
     const getTotalPrice = () => {
         let totalPrice = 0;
         cartItems.forEach((items)=>{
@@ -19,11 +19,9 @@ export default function Cart(props) {
     };
 
     useEffect(()=>{
-        if (props.cartFlag)
         CartGetApi();
-    }, [props.cartFlag])
-
-    console.log(cartItems)
+        cartCountApi();
+    }, [])
 
     const CartGetApi = () => {
         return axios
@@ -32,6 +30,7 @@ export default function Cart(props) {
             })
             .then((res) => {
                 setCartItems(res.data)
+                setCartItemsCheck(res.data[0].cart)
             })
             .catch((error) => { });
     }
@@ -44,7 +43,8 @@ export default function Cart(props) {
                 orders: orders[0].cart
             })
             .then((res) => {
-                setCartItems([])
+                setCartItems([]);
+                cartCountApi();
             })
             .catch((error) => { });
         console.log(orders)
@@ -59,29 +59,28 @@ export default function Cart(props) {
         return axios
             .delete(`${backendURL}/api/cartDelete/${id}`)
             .then((res) => {
-                CartGetApi()
+                cartCountApi();
+                CartGetApi();
             })
             .catch((error) => { });
     }
 
+    const cartCountApi = () => {
+        return axios
+            .get(`${backendURL}/api/getCount`, {
+                headers: { email: localStorage.getItem("email") },
+            })
+            .then((res) => {
+                setCartCount(res.data.count);
+            });
+    };
+
 
   return (
-      <Dialog
-          open={props.cartFlag}
-          PaperProps={{
-              style: {
-                  borderRadius: '14px',
-                  width: '80%',
-                  height: '100%',
-              }
-          }}
-      >
-          <DialogContent>
-            <div className='closeDiv'>
-                  <h3 className='cartTitle'>Cart</h3>
-                  <CloseIcon style={{ cursor: 'pointer' }} onClick={() => { setCartFlag(false) }} />
-            </div>
-              {cartItems.length === 0?
+     <div>
+      <Navigation cartCount={cartCount} />
+          <div className="container" style={{height:'90vh', position:'relative'}}>
+              {cartItems.length === 0 || cartItemsChek.length == 0 ?
                   <div className='emptyCart'>Your cart is empty</div>:(
                       <table style={{ width: '100%' }}>
                           <thead>
@@ -115,11 +114,11 @@ export default function Cart(props) {
                       </table>
               )
               }
-          </DialogContent>
-          <DialogActions>
               {/* Add any actions or buttons here */}
-              <button onClick={handleBuyAgain} className='buyAgainButton'>Buy</button>
-          </DialogActions>
-      </Dialog>
+              <div style={{position:'absolute', bottom:'0', right:'0'}}>
+                  <button onClick={handleBuyAgain} className='buyAgainButton'>Buy</button>
+              </div>
+              </div>
+      </div>
   )
 }

@@ -58,10 +58,12 @@ export default function () {
   return (
     <div>
       <Navigation cartCount={cartCount} />
-      {Object.keys(groupedOrders).map((date) => {
+      {orders.length === 0  ?
+                  <div className='emptyCart' style={{height:'80vh'}}>you have no orders yet</div>:
+      (Object.keys(groupedOrders).map((date) => {
         return (
           <>
-            <h3 style={{ marginLeft: "10px" }}>Date: {date}</h3>
+            <h3 style={{ marginLeft: "10px", fontSize:"1.5rem", fontFamily:'cursive' }} className='mt-4 mb-4'>Date: {date}</h3>
             <div style={{ display: "flex", flexWrap: "wrap" }}>
               {groupedOrders[date].map((order, index) => (
                 <div className="product-card">
@@ -84,7 +86,7 @@ export default function () {
             </div>
           </>
         );
-      })}
+      }))}
     </div>
   );
 }
