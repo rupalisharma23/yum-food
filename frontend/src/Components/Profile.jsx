@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import backendURL from "./Config";
 import { ToastContainer, toast } from 'react-toastify';
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function Profile() {
     const [name, setName] = useState('');
@@ -12,6 +13,9 @@ export default function Profile() {
     const [address, setAddress] = useState('');
     const [password, setPassword] = useState('');
     const [cartCount, setCartCount] = useState("");
+    const [loader, setLoader] = useState(false);
+    const [error, setError] = useState('');
+    const [updateLoader, setUpdateLoader] = useState(false);
     useEffect(() => {
         localStorage.getItem('token') && getUser();
         localStorage.getItem('token') &&  cartCountApi();
@@ -19,11 +23,13 @@ export default function Profile() {
 
 
     const getUser = () => {
+        setLoader(true)
         return axios
             .get(`${backendURL}/api/userDetails`, {
                 headers: { email: localStorage.getItem("email") },
             })
-            .then((res) => {               
+            .then((res) => { 
+                setLoader(false)              
                 setName(res.data.userInfo.name);
                 setEmail(res.data.userInfo.email);
                 setAddress(res.data.userInfo.address)
@@ -33,16 +39,19 @@ export default function Profile() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Updated Name:', name);
-        console.log('Updated Email:', email);
-        console.log('Updated Address:', address);
-
+        const emailPattern = /^[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$/;
+        if (!emailPattern.test(email)) {
+            setError('Please enter a valid email address');
+        }
+        else {
+setUpdateLoader(true)
         return axios.put(`${backendURL}/api/updateInfo`,{
             name,
             email,
             password,
             address
         },{headers:{email:localStorage.getItem('email')}}).then(async(res) => {
+            setUpdateLoader(false)
             toast.success('info updated', {
                 position: toast.POSITION.TOP_CENTER,
                 autoClose: 1000,
@@ -67,7 +76,7 @@ export default function Profile() {
                 progress: undefined,
                 className: 'custom-toast', // Add your custom class here
             })
-        });
+        });}
     };
 
     const cartCountApi = () => {
@@ -85,9 +94,12 @@ export default function Profile() {
     <div>
         <ToastContainer/>
           <Navigation cartCount={cartCount} />
+          {loader ? <div className='spinnerClass' style={{ height: '60vh', display: 'flex', justifyContent: 'center' }}>
+              Loading....
+          </div> : 
           <div className="container" style={{height:'80vh', position:'relative'}}>
               <h1>Edit Profile</h1>
-              <form onSubmit={handleSubmit}>
+                  <form onSubmit={(e) => { !updateLoader && handleSubmit(e) } }>
                   <div className="label-container mt-4">
                       <label htmlFor="name">Name:</label>
                       <input
@@ -122,12 +134,12 @@ export default function Profile() {
                           required
                       />
                   </div>
-
+                      {error && <div className='error'>{error}</div>}
                   <div style={{ position: 'absolute', bottom: '0', width: '100%', textAlign: 'center' }}>
-                      <button type="submit" className='buyAgainButton'>Save Changes</button>
+                          <button type="submit" className='buyAgainButton'>{updateLoader ? <CircularProgress style={{ height: '1rem', width: '1rem', color: 'white' }} /> : "Save Changes"}</button>
                   </div>
               </form>
-          </div>
+          </div>}
     </div>
   )
 }
