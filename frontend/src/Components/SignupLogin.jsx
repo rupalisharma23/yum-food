@@ -72,9 +72,9 @@ export default function SignupLogin() {
         return (
             <div>
                 <Navigation />
-                <div className="container" style={{ height: '80vh', position: 'relative' }}>
+                <div className="container" style={{ position: 'relative' }}>
                     <h1>Register</h1>
-                    <form onSubmit={(e) => { !loader && handleSignup(e) }}>
+                    <form onSubmit={(e) => { !loader && handleSignup(e) }} style={{paddingBottom:'5rem'}} >
                         <div className="label-container mt-4">
                             <label htmlFor="name">Name:</label>
                             <input
