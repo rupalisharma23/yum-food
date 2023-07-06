@@ -13,6 +13,7 @@ export default function Home() {
     const [search, setSearch] = useState('')
     const [food, setFood] = useState([])
     const [cartFlag, setCartFlag] = useState(false)
+    const [loader, setLoader] = useState(false)
     const currentDate = new Date();
     const day = currentDate.getDate();
     const month = currentDate.getMonth() + 1; // Months are zero-based
@@ -25,10 +26,14 @@ export default function Home() {
     }, [cartFlag])
 
     const foodListApi = () => {
+        setLoader(true)
         return axios
             .get(`${backendURL}/api/foodList`)
             .then((res) => {
+                setLoader(false)
                 setFood(res.data)
+            }).catch((error)=>{
+                setLoader(false)
             })
 
     };
@@ -135,6 +140,9 @@ export default function Home() {
 
 
             </div>
+            {loader ? <div className='spinnerClass'>
+                Loading....
+            </div>: <div>
             {
                 food.map((data, index1) => {
                     return (
@@ -162,7 +170,7 @@ export default function Home() {
                                                             <span>{dishes.quantity}</span>
                                                             <button onClick={() => { handleIncrement(dishes, index1, index2) }}>+</button>
                                                         </div>
-                                                        <div className='addToCart'> <button onClick={() => handleAddToCart(index1, index2, dishes)}>Add to Cart</button></div>
+                                                        <div className='addToCart'> <button onClick={() => handleAddToCart(index1, index2, dishes)}> Add to Cart</button></div>
                                                     </div>
 
                                                 </div>
@@ -176,6 +184,7 @@ export default function Home() {
                     )
                 })
             }
+            </div>}
         </div>
     )
 }

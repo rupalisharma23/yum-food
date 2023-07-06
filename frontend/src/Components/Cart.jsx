@@ -3,11 +3,16 @@ import './Cart.css';
 import axios from 'axios';
 import backendURL from './Config';
 import Navigation from "./NavBar";
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function Cart() {
     const [cartItems, setCartItems] = useState([]);
     const [cartItemsChek, setCartItemsCheck] = useState([]);
+    const [loader, setLoader] = useState(false);
+    const [deleteLoader, setDeleteLoader] = useState(false);
+    const [buyLoader, setBuyLoader] = useState(false);
     const [cartCount, setCartCount] = useState("");
+
     const getTotalPrice = () => {
         let totalPrice = 0;
         cartItems.forEach((items)=>{
@@ -24,11 +29,13 @@ export default function Cart() {
     }, [])
 
     const CartGetApi = () => {
+        setLoader(true)
         return axios
             .post(`${backendURL}/api/getCart`, {
                 email: localStorage.getItem('email')
             })
             .then((res) => {
+                setLoader(false)
                 setCartItems(res.data)
                 setCartItemsCheck(res.data[0].cart)
             })
@@ -37,14 +44,18 @@ export default function Cart() {
 
     const buyOrders =() =>{
         let orders = cartItems
+        setBuyLoader(true)
         return axios
             .post(`${backendURL}/api/Orders`, {
                 email:localStorage.getItem('email'),
                 orders: orders[0].cart
             })
-            .then((res) => {
+            .then(async(res) => {
+                setBuyLoader(false)
+                await CartGetApi();
                 setCartItems([]);
-                cartCountApi();
+                setCartItemsCheck([]);
+                await cartCountApi();
             })
             .catch((error) => { });
         console.log(orders)
@@ -56,9 +67,11 @@ export default function Cart() {
     };
 
     const deleteCartItems = (index,id) =>{
+        setDeleteLoader(true)
         return axios
             .delete(`${backendURL}/api/cartDelete/${id}`)
             .then((res) => {
+                setDeleteLoader(false)
                 cartCountApi();
                 CartGetApi();
             })
@@ -79,7 +92,10 @@ export default function Cart() {
   return (
      <div>
       <Navigation cartCount={cartCount} />
-          <div className="container" style={{height:'90vh', position:'relative'}}>
+          {loader ? <div className='spinnerClass' style={{ height: '60vh', display: 'flex', justifyContent: 'center' }}>
+              Loading....
+          </div> : 
+          <div className="container" style={{height:'80vh', position:'relative'}}>
               {cartItems.length === 0 || cartItemsChek.length == 0 ?
                   <div className='emptyCart'>Your cart is empty</div>:(
                       <table style={{ width: '100%' }}>
@@ -102,7 +118,7 @@ export default function Cart() {
                                                 <td style={{ padding: '1rem 0rem', fontFamily: 'cursive', fontSize: '1.2rem' }}>{cart.name}</td>
                                                 <td style={{ padding: '1rem 0rem', fontFamily: 'cursive', fontSize: '1.2rem' }}>{cart.quantity}</td>
                                                 <td style={{ padding: '1rem 0rem', fontFamily: 'cursive', fontSize: '1.2rem' }}>{parseInt(cart.price) * cart.quantity} </td>
-                                                <td style={{ padding: '1rem 0rem', fontFamily: 'cursive', fontSize: '1.2rem', color: 'red' }} onClick={() => { deleteCartItems(index, cart._id) }} >Delete</td>
+                                                <td style={{ padding: '1rem 0rem', fontFamily: 'cursive', fontSize: '1.2rem', color: 'red', cursor: 'pointer' }} onClick={() => { !deleteLoader && deleteCartItems(index, cart._id) }} >{ deleteLoader ?  <CircularProgress style={{height:'1rem', width:'1rem', color:'red'}} /> : "Delete"}</td>
                                             </tr>
                                         )
                                     })
@@ -115,10 +131,10 @@ export default function Cart() {
               )
               }
               {/* Add any actions or buttons here */}
-              {(cartItemsChek.length > 0) && (<div style={{ position: 'absolute', bottom: '0', width: '100%', textAlign: 'center' }}>
-                 <button onClick={handleBuyAgain} className='buyAgainButton'>Buy</button>
+                  {(cartItems.length === 0 || cartItemsChek.length == 0) ? null : (<div style={{ position: 'absolute', bottom: '0', width: '100%', textAlign: 'center' }}>
+                      <button onClick={() => { !buyLoader && handleBuyAgain() }} className='buyAgainButton'>{buyLoader ? <CircularProgress style={{ height: '1rem', width: '1rem', color: 'white' }} /> : "Buy"}</button>
               </div>)}
-              </div>
+              </div>}
       </div>
   )
 }

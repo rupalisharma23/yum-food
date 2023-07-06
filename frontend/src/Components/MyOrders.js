@@ -7,6 +7,7 @@ import backendURL from "./Config";
 export default function () {
   const [orders, setOrders] = useState([]);
   const [cartCount, setCartCount] = useState("");
+  const [loader, setLoader] = useState(false);
 
   useEffect(() => {
    localStorage.getItem("token") && OrderListApi();
@@ -14,11 +15,13 @@ export default function () {
   }, []);
 
   const OrderListApi = () => {
+    setLoader(true)
     return axios
       .post(`${backendURL}/api/getOrders`, {
         email: localStorage.getItem("email"),
       })
       .then((res) => {
+        setLoader(false)
         setOrders(res.data);
       })
       .catch((error) => {});
@@ -58,7 +61,10 @@ export default function () {
   return (
     <div>
       <Navigation cartCount={cartCount} />
-      {orders.length === 0  ?
+        {loader ? <div className='spinnerClass' style={{height:'60vh', display:'flex', justifyContent:'center'}}>
+                Loading....
+            </div>: 
+      (orders.length === 0  ?
                   <div className='emptyCart' style={{height:'80vh'}}>you have no orders yet</div>:
       (Object.keys(groupedOrders).map((date) => {
         return (
@@ -86,7 +92,7 @@ export default function () {
             </div>
           </>
         );
-      }))}
+      })))}
     </div>
   );
 }

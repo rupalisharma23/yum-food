@@ -7,11 +7,13 @@ import backendURL from './Config';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Navigation from "./NavBar";
+import CircularProgress from '@mui/material/CircularProgress';
 
 export default function SignupLogin() {
     const [emailLogin, setEmailLogin] = useState('');
     const [passwordLogin, setPasswordLogin] = useState('');
-    const [error, setError] = useState('')
+    const [error, setError] = useState('');
+    const [loader, setLoader] = useState(false);
     const navigate = useNavigate();
 
     const handleLogin = (e) => {
@@ -29,6 +31,7 @@ export default function SignupLogin() {
             setError('please enter valid password')
         }
         else {
+            setLoader(true)
             return axios
                 .post(
                     `${backendURL}/api/login`,
@@ -38,11 +41,13 @@ export default function SignupLogin() {
                     },
                 )
                 .then((res) => {
+                    setLoader(false)
                     localStorage.setItem('token', res.data.authToken)
                     localStorage.setItem('email', emailLogin)
                     navigate("/")
                 })
                 .catch((error) => {
+                    setLoader(false)
                     setError(error.response.data.errors)
                 });
         }
@@ -53,8 +58,8 @@ export default function SignupLogin() {
             <div>
                 <Navigation />
                 <div className="container" style={{ height: '80vh', position: 'relative' }}>
-                    <h1>Edit Profile</h1>
-                    <form onSubmit={handleLogin}>
+                    <h1>Login</h1>
+                    <form onSubmit={(e) => { !loader && handleLogin(e) }}>
                         <div className="label-container mt-4">
                             <label htmlFor="email">Email:</label>
                             <input
@@ -79,7 +84,7 @@ export default function SignupLogin() {
                         </div>
                         {error && <div className='error'>{error}</div>}
                         <div style={{ position: 'absolute', bottom: '0', width:'100%', textAlign:'center' }}>
-                            <button type="submit" className='buyAgainButton'>Login</button>
+                            <button type="submit" className='buyAgainButton'>{loader ? <CircularProgress style={{ height: '1rem', width: '1rem', color: 'white' }} /> : "Login"}</button>
                         </div>
                     </form>
                 </div>

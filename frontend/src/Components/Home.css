@@ -82,6 +82,11 @@ p {
     cursor: pointer;
 }
 
+.addToCart{
+  display: flex;
+  align-items: center;
+}
+
 .addToCart button{
    font-size: 1rem;
     border: none;
@@ -92,6 +97,7 @@ p {
     padding: 0.5rem;
     margin-right: 10px;
     font-family: cursive;
+    min-width: 12rem;
 }
 
 .search-bar-container{
@@ -118,6 +124,16 @@ p {
     top: 44px;
     left: 23px;
 
+}
+
+.spinnerClass{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 5rem;
+    font-size: 3rem;
+    font-family: cursive;
+    color: #800064;
 }
 
 
