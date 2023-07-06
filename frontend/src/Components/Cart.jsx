@@ -118,7 +118,7 @@ export default function Cart() {
                                                 <td style={{ padding: '1rem 0rem', fontFamily: 'cursive', fontSize: '1.2rem' }}>{cart.name}</td>
                                                 <td style={{ padding: '1rem 0rem', fontFamily: 'cursive', fontSize: '1.2rem' }}>{cart.quantity}</td>
                                                 <td style={{ padding: '1rem 0rem', fontFamily: 'cursive', fontSize: '1.2rem' }}>{parseInt(cart.price) * cart.quantity} </td>
-                                                <td style={{ padding: '1rem 0rem', fontFamily: 'cursive', fontSize: '1.2rem', color: 'red', cursor: 'pointer' }} onClick={() => { !deleteLoader && deleteCartItems(index, cart._id) }} >{ deleteLoader ?  <CircularProgress style={{height:'1rem', width:'1rem', color:'red'}} /> : "Delete"}</td>
+                                                <td style={{ padding: '1rem 0rem', fontFamily: 'cursive', fontSize: '1.2rem', color: 'red', cursor: 'pointer' }} onClick={() => { deleteCartItems(index, cart._id) }} >Delete</td>
                                             </tr>
                                         )
                                     })
